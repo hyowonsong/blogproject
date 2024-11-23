@@ -1,16 +1,19 @@
 package com.blogproject.api.controller;
 
+
 import com.blogproject.api.request.PostCreate;
+import com.blogproject.api.request.PostEdit;
+import com.blogproject.api.response.PostResponse;
 import com.blogproject.api.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -22,17 +25,30 @@ public class PostController {
     @PostMapping("/posts")
     public void post(@RequestBody @Valid PostCreate request){
         postService.write(request);
+    }
 
-//        // 데이터 검증
-//        String title = params.getTitle();
-//        if (title == null || title.equals("")){
-//            //error
-//            throw new Exception("타이틀값이 없어요!");
-//        }
-//
-//        String content = params.getContent();
-//        if (content == null || content.equals("")){
-//            // error
-//        }
+    /**
+     * /posts - > 글 전체 조회(검색 + 페이징)
+     * /posts/{postId} -> 글 한개만 조회
+     */
+
+    @GetMapping("/posts/{postId}")
+    public PostResponse get(@PathVariable Long postId){
+        return postService.get(postId);
+    }
+
+    @GetMapping("/posts")
+    public List<PostResponse> getList(Pageable pageable){
+        return postService.getList(pageable);
+    }
+
+    @PatchMapping("/posts/{postId}")
+    public void edit(@PathVariable Long postId, @RequestBody @Valid PostEdit request){
+        postService.edit(postId, request);
+    }
+
+    @DeleteMapping("/posts/{postId}")
+    public void delete(@PathVariable Long postId){
+        postService.delete(postId);
     }
 }
