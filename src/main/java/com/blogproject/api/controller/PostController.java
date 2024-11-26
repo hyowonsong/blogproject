@@ -1,6 +1,7 @@
 package com.blogproject.api.controller;
 
 
+import com.blogproject.api.config.data.UserSession;
 import com.blogproject.api.request.PostCreate;
 import com.blogproject.api.request.PostEdit;
 import com.blogproject.api.response.PostResponse;
@@ -9,9 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.util.List;
 
@@ -21,6 +20,18 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+
+    // Interceptor 를 위한 테스트
+    @GetMapping("/foo")
+    public Long foo(UserSession userSession){
+        log.info(">>>{}", userSession.id);
+        return userSession.id;
+    }
+
+    @GetMapping("/bar")
+    public String bar(UserSession userSession) {
+        return "인증이 필요한 페이지";
+    }
 
     @PostMapping("/posts")
     public void post(@RequestBody @Valid PostCreate request){
