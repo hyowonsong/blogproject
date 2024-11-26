@@ -22,6 +22,13 @@ public class PostController {
 
     private final PostService postService;
 
+    // Interceptor 를 위한 테스트
+    @GetMapping("/foo")
+    public String foo(@RequestAttribute("username") String userName){
+        log.info(">>>{}", userName);
+        return "foo";
+    }
+
     @PostMapping("/posts")
     public void post(@RequestBody @Valid PostCreate request){
         request.validate();
