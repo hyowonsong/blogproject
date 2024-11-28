@@ -16,3 +16,6 @@ spring:
         max-page-size: 2000
         default-page-size: 20
         one-indexed-parameters: true
+
+blog:
+  jwt-key: "hR7Go0KFDhBk5jl0J2ht0Q6B7LtK/TKhiU3GAlHte2c="
