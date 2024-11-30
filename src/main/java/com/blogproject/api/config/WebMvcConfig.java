@@ -1,12 +1,8 @@
 package com.blogproject.api.config;
 
-import com.blogproject.api.repository.SessionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
@@ -19,11 +15,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
 //                .excludePathPatterns("/error", "/favicon.ico");
 //    }
 
-    private final SessionRepository sessionRepository;
+//    private final SessionRepository sessionRepository;
     private final AppConfig appConfig;
 
-    @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new AuthResolver(sessionRepository, appConfig));
-    }
+    // 스프링 시큐리티를 적용하기 때문에 삭제
+//    @Override
+//    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+//        resolvers.add(new AuthResolver(sessionRepository, appConfig));
+//    }
 }

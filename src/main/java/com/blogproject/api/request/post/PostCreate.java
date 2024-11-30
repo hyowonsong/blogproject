@@ -1,4 +1,4 @@
-package com.blogproject.api.request;
+package com.blogproject.api.request.post;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-public class PostEdit {
+public class PostCreate {
 
     @NotBlank(message = "타이틀을 입력하세요.")
     private String title;
@@ -18,8 +18,9 @@ public class PostEdit {
     private String content;
 
     @Builder
-    public PostEdit(String title, String content){
+    public PostCreate(String title, String content) {
         this.title = title;
         this.content = content;
     }
+
 }

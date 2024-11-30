@@ -1,4 +1,4 @@
-package com.blogproject.api.domain;
+package com.blogproject.api.request;
 
 import lombok.Builder;
 import lombok.Data;
