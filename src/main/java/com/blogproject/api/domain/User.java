@@ -12,7 +12,6 @@ import java.util.List;
 
 @Getter
 @Entity
-@Table(name = "users")  // "user" 대신 "users"로 변경
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
@@ -22,15 +21,14 @@ public class User {
 
     private String name;
 
-    private String email;
+    private String email; // 아이디
 
     private String password;
 
     private LocalDateTime createdAt;
 
-    // session 관련
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private List<Session> sessions = new ArrayList<>();
+    private List<Post> posts;
 
     @Builder
     public User(String name, String email, String password) {
@@ -40,13 +38,14 @@ public class User {
         this.createdAt = LocalDateTime.now();
     }
 
-    public Session addSession() {
-        Session session = Session.builder()
-                .user(this)
-                .build();
-        sessions.add(session);
-
-        return session;
-    }
+    // 스프링 시큐리티를 위해 삭제
+//    public Session addSession() {
+//        Session session = Session.builder()
+//                .user(this)
+//                .build();
+//        sessions.add(session);
+//
+//        return session;
+//    }
 
 }
