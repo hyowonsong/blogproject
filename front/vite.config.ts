@@ -1,30 +1,24 @@
-import { fileURLToPath, URL } from 'node:url'
+import { fileURLToPath, URL } from 'url'
 
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
-import vueDevTools from 'vite-plugin-vue-devtools'
 
-// https://vite.dev/config/
+// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    vue(),
-    vueJsx(),
-    vueDevTools(),
-  ],
+  plugins: [vue(), vueJsx()],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
   server: {
+    port: 3000,
     proxy: {
-      "/api": {
-        target: "http://localhost:8080",
-        rewrite: (path) => path.replace(/^\/api/, ""),
+      '/api': {
+        target: 'http://localhost:8080',
+        // rewrite: (path) => path.replace(/^\/api/, ''),        // 현재 로컬에서 가능
       },
     },
-      port: 3000, // 개발 서버 포트를 3000번으로 변경
-      host: true, // 네트워크에서 접근 가능하도록 설정 (선택 사항)
-    },
+  },
 })

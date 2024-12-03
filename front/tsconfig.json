@@ -1,11 +1,26 @@
 {
-  "files": [],
+  "extends": "@vue/tsconfig/tsconfig.json",
+  "include": [
+    "env.d.ts",
+    "src/**/*",
+    "src/**/*.vue"
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "noImplicitAny": false,
+    "strictPropertyInitialization": false,
+    "strict": true,
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
+  },
   "references": [
     {
-      "path": "./tsconfig.node.json"
-    },
-    {
-      "path": "./tsconfig.app.json"
+      "path": "./tsconfig.vite-config.json"
     }
   ]
 }
