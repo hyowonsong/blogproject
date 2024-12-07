@@ -34,8 +34,9 @@ public class PostController {
 //        return "인증이 필요한 페이지";
 //    }
 
+    // 게시글 권한이 있는 사람만 작성할 수 있도록 ROLE_ADMIN 해준다.
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping("/posts")
+    @PostMapping("/api/posts")
     public void post(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody @Valid PostCreate request) {
         postService.write(userPrincipal.getUserId(), request);
     }
@@ -46,24 +47,24 @@ public class PostController {
      */
 
 
-    @GetMapping("posts/{postId}")
+    @GetMapping("/api/posts/{postId}")
     public PostResponse get(@PathVariable Long postId) {
         return postService.get(postId);
     }
 
-    @GetMapping("posts")
+    @GetMapping("/api/posts")
     public PagingResponse<PostResponse> getList(@ModelAttribute PostSearch postSearch) {
         return postService.getList(postSearch);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PatchMapping("/posts/{postId}")
+    @PatchMapping("/api/posts/{postId}")
     public void edit(@PathVariable Long postId, @RequestBody @Valid PostEdit request) {
         postService.edit(postId, request);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN') && hasPermission(#postId, 'POST', 'DELETE')")
-    @DeleteMapping("/posts/{postId}")
+    @DeleteMapping("/api/posts/{postId}")
     public void delete(@PathVariable Long postId) {
         postService.delete(postId);
     }

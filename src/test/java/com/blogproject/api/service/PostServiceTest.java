@@ -2,18 +2,20 @@ package com.blogproject.api.service;
 
 import com.blogproject.api.domain.Post;
 import com.blogproject.api.exception.PostNotFound;
-import com.blogproject.api.repository.PostRepository;
-import com.blogproject.api.request.PostCreate;
-import com.blogproject.api.request.PostEdit;
+import com.blogproject.api.repository.UserRepository;
+import com.blogproject.api.repository.post.PostRepository;
+import com.blogproject.api.domain.User;
+
+import com.blogproject.api.request.post.PostCreate;
+import com.blogproject.api.request.post.PostEdit;
+import com.blogproject.api.request.post.PostSearch;
+import com.blogproject.api.response.PagingResponse;
 import com.blogproject.api.response.PostResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,22 +32,34 @@ class PostServiceTest {
     @Autowired
     private PostRepository postRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @BeforeEach
-    void clean(){
+    void clean() {
         postRepository.deleteAll();
+        userRepository.deleteAll();
     }
+
 
     @Test
     @DisplayName("글 작성")
-    void test1(){
+    void test1() {
         // given
+        var user = User.builder()
+                .name("맨")
+                .email("woniwoni@gmail.com")
+                .password("1234")
+                .build();
+        userRepository.save(user);
+
         PostCreate postCreate = PostCreate.builder()
                 .title("제목입니다.")
                 .content("내용입니다.")
                 .build();
 
         // when
-        postService.write(postCreate);
+        postService.write(user.getId(), postCreate);
 
         // then
         assertEquals(1L, postRepository.count());
@@ -78,23 +92,25 @@ class PostServiceTest {
     @DisplayName("글 여러개 조회")
     void test3() {
         // given
-        List<Post> requestPosts = IntStream.range(1, 31)
+        List<Post> requestPosts = IntStream.range(0, 20)
                 .mapToObj(i -> Post.builder()
-                        .title("제목 " + i)
-                        .content("반포자이 " + i)
+                        .title("foo" + i)
+                        .content("bar1" + i)
                         .build())
                 .collect(Collectors.toList());
+
         postRepository.saveAll(requestPosts);
 
-        Pageable pageable = PageRequest.of(0,5, Sort.Direction.DESC, "id");
+        PostSearch postSearch = PostSearch.builder()
+                .page(1)
+                .build();
 
         // when
-        List<PostResponse> posts = postService.getList(pageable);
+        PagingResponse<PostResponse> posts = postService.getList(postSearch);
 
         // then
-        assertEquals(5L, posts.size());
-        assertEquals("제목 30", posts.get(0).getTitle());
-        assertEquals("제목 26", posts.get(4).getTitle());
+        assertEquals(10L, posts.getSize());
+        assertEquals("foo19", posts.getItems().get(0).getTitle());
     }
 
     @Test
@@ -162,7 +178,6 @@ class PostServiceTest {
         assertEquals(0, postRepository.count());
     }
 
-    // 테스트 실패 케이스
     @Test
     @DisplayName("글 1개 조회 - 존재하지 않는 글")
     void test7() {

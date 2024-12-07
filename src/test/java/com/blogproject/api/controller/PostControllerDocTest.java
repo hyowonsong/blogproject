@@ -1,9 +1,13 @@
 package com.blogproject.api.controller;
 
+import com.blogproject.api.config.BlogMockUser;
+import com.blogproject.api.domain.User;
+import com.blogproject.api.repository.UserRepository;
+import com.blogproject.api.request.post.PostCreate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.blogproject.api.domain.Post;
-import com.blogproject.api.repository.PostRepository;
-import com.blogproject.api.request.PostCreate;
+import com.blogproject.api.repository.post.PostRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,20 +42,37 @@ public class PostControllerDocTest {
     private PostRepository postRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private ObjectMapper objectMapper;
+
+    @AfterEach
+    void clean() {
+        postRepository.deleteAll();
+        userRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("글 단건 조회")
     void test1() throws Exception {
         // given
+        User user = User.builder()
+                .email("asd@asd.com")
+                .name("man")
+                .password("123456")
+                .build();
+        userRepository.save(user);
+
         Post post = Post.builder()
+                .user(user)
                 .title("제목")
                 .content("내용")
                 .build();
         postRepository.save(post);
 
         // expected
-        mockMvc.perform(get("/posts/{postId}", 1L)
+        mockMvc.perform(get("/api/posts/{postId}", post.getId())
                         .accept(APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -62,12 +83,14 @@ public class PostControllerDocTest {
                         responseFields(
                                 fieldWithPath("id").description("게시글 ID"),
                                 fieldWithPath("title").description("제목"),
-                                fieldWithPath("content").description("내용")
+                                fieldWithPath("content").description("내용"),
+                                fieldWithPath("regDate").description("등록일")
                         )
                 ));
     }
 
     @Test
+    @BlogMockUser
     @DisplayName("글 등록")
     void test2() throws Exception {
         // given
@@ -79,7 +102,7 @@ public class PostControllerDocTest {
         String json = objectMapper.writeValueAsString(request);
 
         // expected
-        mockMvc.perform(post("/posts")
+        mockMvc.perform(post("/api/posts")
                         .contentType(APPLICATION_JSON)
                         .accept(APPLICATION_JSON)
                         .content(json))
