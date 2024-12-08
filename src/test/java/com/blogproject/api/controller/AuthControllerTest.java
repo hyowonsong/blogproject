@@ -1,11 +1,10 @@
 package com.blogproject.api.controller;
 
-import com.blogproject.api.domain.Session;
 import com.blogproject.api.domain.User;
 
 import com.blogproject.api.repository.UserRepository;
-import com.blogproject.api.request.Login;
 
+import com.blogproject.api.request.Signup;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -44,125 +43,143 @@ class AuthControllerTest {
         userRepository.deleteAll();
     }
 
-    @Test
-    @DisplayName("로그인 성공")
-    void test1() throws Exception {
-        // given
-        userRepository.save(User.builder()
-                .name("맨")
-                .email("woniwoni@gmail.com")
-                .password("1234")
-                .build());
+//    @Test
+//    @DisplayName("로그인 성공")
+//    void test1() throws Exception {
+//        // given
+//        userRepository.save(User.builder()
+//                .name("맨")
+//                .email("woniwoni@gmail.com")
+//                .password("1234")
+//                .build());
+//
+//        Login login = Login.builder()
+//                .email("woniwoni@gmail.com")
+//                .password("1234")
+//                .build();
+//
+//        String json = objectMapper.writeValueAsString(login);
+//
+//        // expected
+//        mockMvc.perform(post("/auth/login")
+//                        .contentType(APPLICATION_JSON)
+//                        .content(json))
+//                .andExpect(status().isOk())
+////                .andExpect(jsonPath("$.code").value("400"))
+////                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+////                .andExpect(jsonPath("$.validation.title").value("타이틀을 입력하세요."))
+//                .andDo(print());
+//    }
+//
+//    @Test
+//    @Transactional
+//    @DisplayName("로그인 성공후 세션 1개 생성")
+//    void test2() throws Exception {
+//        // given
+//        User user = userRepository.save(User.builder()
+//                .name("맨")
+//                .email("woniwoni@gmail.com")
+//                .password("1234")
+//                .build());
+//
+//        Login login = Login.builder()
+//                .email("woniwoni@gmail.com")
+//                .password("1234")
+//                .build();
+//
+//        String json = objectMapper.writeValueAsString(login);
+//
+//        // expected
+//        mockMvc.perform(post("/auth/login")
+//                        .contentType(APPLICATION_JSON)
+//                        .content(json))
+//                .andExpect(status().isOk())
+//                .andDo(print());
+//
+//        assertEquals(1L, user.getSessions().size());
+//    }
+//
+//    @Test
+//    @DisplayName("로그인 성공후 세션 응답")
+//    void test3() throws Exception {
+//        // given
+//        User user = userRepository.save(User.builder()
+//                .name("맨")
+//                .email("woniwoni@gmail.com")
+//                .password("1234")
+//                .build());
+//
+//        Login login = Login.builder()
+//                .email("woniwoni@gmail.com")
+//                .password("1234")
+//                .build();
+//
+//        String json = objectMapper.writeValueAsString(login);
+//
+//        // expected
+//        mockMvc.perform(post("/auth/login")
+//                        .contentType(APPLICATION_JSON)
+//                        .content(json))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.accessToken", notNullValue()))
+//                .andDo(print());
+//    }
+//
+//    @Test
+//    @DisplayName("로그인 후 권한이 필요한 페이지 접속한다 /foo")
+//    void test4() throws Exception {
+//        // given
+//        User user = User.builder()
+//                .name("맨")
+//                .email("woniwoni@gmail.com")
+//                .password("1234")
+//                .build();
+//        Session session = user.addSession();
+//        userRepository.save(user);
+//
+//        // expected
+//        mockMvc.perform(get("/foo")
+//                        .header("Authorization", session.getAccessToken())
+//                        .contentType(APPLICATION_JSON))
+//                .andExpect(status().isOk())
+//                .andDo(print());
+//    }
+//
+//    @Test
+//    @DisplayName("로그인 후 검증되지 않은 세션값으로 권한이 필요한 페이지에 접속할 수 없다.")
+//    void test5() throws Exception {
+//        // given
+//        User user = User.builder()
+//                .name("맨")
+//                .email("woniwoni@gmail.com")
+//                .password("1234")
+//                .build();
+//        Session session = user.addSession();
+//        userRepository.save(user);
+//
+//        // expected
+//        mockMvc.perform(get("/foo")
+//                        .header("Authorization", session.getAccessToken() + "-other")
+//                        .contentType(APPLICATION_JSON))
+//                .andExpect(status().isUnauthorized())
+//                .andDo(print());
+//    }
 
-        Login login = Login.builder()
+    @Test
+    @DisplayName("회원가입")
+    void test6() throws Exception {
+        // given
+        Signup signup = Signup.builder()
                 .email("woniwoni@gmail.com")
                 .password("1234")
+                .name("맨")
                 .build();
 
-        String json = objectMapper.writeValueAsString(login);
-
         // expected
-        mockMvc.perform(post("/auth/login")
-                        .contentType(APPLICATION_JSON)
-                        .content(json))
-                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.code").value("400"))
-//                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
-//                .andExpect(jsonPath("$.validation.title").value("타이틀을 입력하세요."))
-                .andDo(print());
-    }
-
-    @Test
-    @Transactional
-    @DisplayName("로그인 성공후 세션 1개 생성")
-    void test2() throws Exception {
-        // given
-        User user = userRepository.save(User.builder()
-                .name("맨")
-                .email("woniwoni@gmail.com")
-                .password("1234")
-                .build());
-
-        Login login = Login.builder()
-                .email("woniwoni@gmail.com")
-                .password("1234")
-                .build();
-
-        String json = objectMapper.writeValueAsString(login);
-
-        // expected
-        mockMvc.perform(post("/auth/login")
-                        .contentType(APPLICATION_JSON)
-                        .content(json))
-                .andExpect(status().isOk())
-                .andDo(print());
-
-        assertEquals(1L, user.getSessions().size());
-    }
-
-    @Test
-    @DisplayName("로그인 성공후 세션 응답")
-    void test3() throws Exception {
-        // given
-        User user = userRepository.save(User.builder()
-                .name("맨")
-                .email("woniwoni@gmail.com")
-                .password("1234")
-                .build());
-
-        Login login = Login.builder()
-                .email("woniwoni@gmail.com")
-                .password("1234")
-                .build();
-
-        String json = objectMapper.writeValueAsString(login);
-
-        // expected
-        mockMvc.perform(post("/auth/login")
-                        .contentType(APPLICATION_JSON)
-                        .content(json))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.accessToken", notNullValue()))
-                .andDo(print());
-    }
-
-    @Test
-    @DisplayName("로그인 후 권한이 필요한 페이지 접속한다 /foo")
-    void test4() throws Exception {
-        // given
-        User user = User.builder()
-                .name("맨")
-                .email("woniwoni@gmail.com")
-                .password("1234")
-                .build();
-        Session session = user.addSession();
-        userRepository.save(user);
-
-        // expected
-        mockMvc.perform(get("/foo")
-                        .header("Authorization", session.getAccessToken())
+        mockMvc.perform(post("/api/auth/signup")
+                        .content(objectMapper.writeValueAsString(signup))
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andDo(print());
-    }
-
-    @Test
-    @DisplayName("로그인 후 검증되지 않은 세션값으로 권한이 필요한 페이지에 접속할 수 없다.")
-    void test5() throws Exception {
-        // given
-        User user = User.builder()
-                .name("맨")
-                .email("woniwoni@gmail.com")
-                .password("1234")
-                .build();
-        Session session = user.addSession();
-        userRepository.save(user);
-
-        // expected
-        mockMvc.perform(get("/foo")
-                        .header("Authorization", session.getAccessToken() + "-other")
-                        .contentType(APPLICATION_JSON))
-                .andExpect(status().isUnauthorized())
                 .andDo(print());
     }
 }

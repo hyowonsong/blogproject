@@ -1,6 +1,6 @@
 ### 회원가입
 
-POST http://localhost:8080/auth/signup
+POST http://localhost:8080/api/auth/signup
 Content-Type: application/json
 
 {
@@ -12,7 +12,7 @@ Content-Type: application/json
 
 ### 로그인
 
-POST http://localhost:8080/auth/login
+POST http://localhost:8080/api/auth/login
 Content-Type: application/json
 
 {
